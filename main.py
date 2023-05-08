@@ -1,10 +1,14 @@
 import csv
+import exifread
 import os
 import sys
-#from pathlib import Path, WindowsPath, PureWindowsPath
-import exifread
 
 
+'''
+Usage: python.exe main.py "filepath".
+Will looks for pictures in program folder when no filepath specified.
+exif.csv file will be saved in program folder
+'''
 
 def main():
 
@@ -17,11 +21,10 @@ def main():
     except IndexError:
         directory = "."
    
-
+    # exif database, path for csv file and csv header
     db = []
     csv_path = "exif.csv"
     header = ["path", "latitude", "lat ref", "longitude", "long ref", "timestamp"]
-
 
 
     # Create csv file and csv writer obj, exit main() when returns False 
