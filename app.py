@@ -31,11 +31,16 @@ def index():
             long = row["longitude"]
             path = row["path"]
 
-            
-            folium.Marker([lat, long], popup="leuk", tooltip=tooltip).add_to(map)
+            name = path.replace("\\", "/")
+            name = f"file:///{name}"
+
+            #name = f'<a href="file:///{name}">link</a>'
+            #print(name)
+            popup = folium.Popup(name, parse_html=False)
+            folium.Marker([lat, long], popup=popup, tooltip=tooltip).add_to(map)
 
     
-    
+    '''
     htmlcode = """<div>
     <img src="/img_chania.jpg" alt="Flowers in Chania" width="230" height="172">
     <br /><span>Flowers in Chania</span>
@@ -43,7 +48,7 @@ def index():
     tooltip = "Click me!"
 
     folium.Marker([46.216, -124.1280], popup=htmlcode, tooltip=tooltip).add_to(map)
-
+    '''
 
 
     return map.get_root().render()

@@ -10,7 +10,7 @@ Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
 
-def main():
+def main(directory="."):
 
     # Parse arguments, set photo directory
     # Use current directory when no argument given
@@ -20,8 +20,10 @@ def main():
             print("Invalid directory")
             return 1
     except IndexError:
-        directory = "."
-   
+        # directory = "."
+        pass
+
+    print(directory)
     # Set path for output file
     csv_path = "exif.csv"
 
@@ -77,31 +79,42 @@ def read_exif (directory: str):
     for root, dirs, files in os.walk(directory):
         for name in files:
             img_path = os.path.join(root, name)
-            
+            # print(img_path)
             # Try to read file exif
             try:
                 with open(img_path, "rb") as file:
                     exif = exifread.process_file(file, details=False)
-                #print(exif)
+                # print(exif)
             except Exception:
-                #print("File read error")
+                print("File read error")
                 pass
 
+            # Extract geodata converted to decimal cordinates. If no geodata, continue loop
             try:
-                # Append date to exif list, geodata converted to decimal cordinates
-                out.append({"path": os.path.abspath(img_path),
+                geo = {"path": os.path.abspath(img_path),
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
-                           "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef'],
-                           "timestamp": exif['Image DateTime']})
-            except KeyError:
+                           "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef']}
+            except (NameError, KeyError):
                 #print('No geodata')
+                continue
+            
+            # Extract Timestamp. If no timestamp, pass
+            try:
+                geo["timestamp"] = exif['EXIF DateTimeOriginal']
+            except KeyError:
+                print("No Timestamp")
                 pass
+
+            # Append geodata to output list
+            out.append(geo)
+
+    print("Geotags found:", len(out))
     return out
 
 
 # Write csv file
 # On success return 'True', on failure return 'False'
-def write_csv (path: str, mode: str, data: dict):
+def write_csv (path: str, mode: str, data: list):
     
     # Extract keys to use as header. Return 'False' if dict is empty
     try:
@@ -113,7 +126,7 @@ def write_csv (path: str, mode: str, data: dict):
     try:
         file = open(path, mode, newline='')
     except IOError:
-        raise "Unable to write csv file"
+        raise IOError
 
     with file:
         writer = csv.DictWriter(file, fieldnames=header)
