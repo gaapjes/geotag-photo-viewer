@@ -32,10 +32,10 @@ def main():
         return 1
     
     # Read exif data
-    data = read_exif(directory)
+    geodata = read_exif(directory)
 
     # Write csv file and print result
-    if write_csv(csv_path, mode, data):
+    if write_csv(csv_path, mode, geodata):
         print("Operation completed")
     else:
         print("No geodata found")
@@ -54,10 +54,8 @@ def set_mode (csv_path: str):
 
     if action == 'A':
         return "a"
-        #return open("exif.csv", "a", newline='')
     elif action == 'O':
         return "w"
-        #return open("exif.csv", "w", newline='')
     elif action == 'C':
         return False
 
@@ -86,11 +84,11 @@ def read_exif (directory: str):
                     exif = exifread.process_file(file, details=False)
                 #print(exif)
             except Exception:
-                # print("File read error")
+                #print("File read error")
                 pass
 
             try:
-                # Append date to exif list, gps data converted to decimal cordinates
+                # Append date to exif list, geodata converted to decimal cordinates
                 out.append({"path": os.path.abspath(img_path),
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
                            "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef'],
@@ -124,7 +122,6 @@ def write_csv (path: str, mode: str, data: dict):
         for row in data:
             writer.writerow(row)
     
-    print("Operation completed")
     return True
 
 
