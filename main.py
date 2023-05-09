@@ -85,10 +85,9 @@ def read_exif (directory: str):
                 with open(img_path, "rb") as file:
                     exif = exifread.process_file(file, details=False)
                 #print(exif)
-            except:
-                # print("File error")
+            except Exception:
+                # print("File read error")
                 pass
-
 
             try:
                 # Append date to exif list, gps data converted to decimal cordinates
@@ -97,7 +96,7 @@ def read_exif (directory: str):
                            "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef'],
                            "timestamp": exif['Image DateTime']})
             except KeyError:
-                #print('No GPS data')
+                #print('No geodata')
                 pass
     return out
 
