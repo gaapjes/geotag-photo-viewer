@@ -5,7 +5,7 @@ import sys
 
 
 '''
-Usage: python.exe main.py "filepath".
+Usage: python.exe main.py "image_folder".
 Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
