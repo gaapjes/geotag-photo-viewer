@@ -113,19 +113,19 @@ def write_csv (path: str, mode: str, data: dict):
     
     # Write csv file
     try:
-        with open(path, mode, newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=header)
-            if mode == "w":
-                writer.writeheader()
-
-            for row in data:
-                writer.writerow(row)
+        file = open(path, mode, newline='')
     except IOError:
         raise "Unable to write csv file"
-    finally:
-        print("Operation completed")
-        return True
 
+    with file:
+        writer = csv.DictWriter(file, fieldnames=header)
+        if mode == "w":
+            writer.writeheader()
+        for row in data:
+            writer.writerow(row)
+    
+    print("Operation completed")
+    return True
 
 
 if __name__ == "__main__":
