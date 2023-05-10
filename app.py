@@ -32,11 +32,14 @@ def index():
             path = row["path"]
 
             name = path.replace("\\", "/")
-            name = f"file:///{name}"
+            dir = r"file:///C:\Users\kaspe\Desktop\Staat op lacie\Camera 2022\DCIM\100MSDCF\DSC05931.JPG"
 
-            #name = f'<a href="file:///{name}">link</a>'
-            #print(name)
-            popup = folium.Popup(name, parse_html=False)
+            test = "a"
+            link = f'<a href="{dir}">link</a>'
+            #img = "<img src='/static/img_chania.jpg' alt='test' width='500' height='600'>" 
+            img = r"<img src='file:///C:/Users/kaspe/Desktop/Staat op lacie/Camera 2022/DCIM/100MSDCF/DSC05931.JPG' alt='test' width='500' height='600'>" 
+
+            popup = folium.Popup(img, parse_html=False)
             folium.Marker([lat, long], popup=popup, tooltip=tooltip).add_to(map)
 
     
@@ -53,3 +56,10 @@ def index():
 
     return map.get_root().render()
     #return render_template('index.html', map=map)
+
+
+    probeer:
+
+    @app.route('/media/<path:filename>', methods=['GET','POST'])
+def send_foo(filename):
+    return send_from_directory('/media/usbhdd1/downloads/', filename, as_attachment=True)
