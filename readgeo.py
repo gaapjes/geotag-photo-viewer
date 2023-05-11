@@ -51,14 +51,14 @@ def set_mode (csv_path: str):
     if not os.path.isfile(csv_path):
         return "w"
     else:
-        action = input(f"Database already exists. Do you wan to: [A]ppend, [O]verwrite, [C]ancel? : ").upper()
-
-    if action == 'A':
-        return "a"
-    elif action == 'O':
-        return "w"
-    elif action == 'C':
-        return False
+        while True:
+            action = input(f"Database already exists. Do you wan to: [A]ppend, [O]verwrite, [C]ancel? : ").upper()
+            if action == 'A':
+                return 'a'
+            elif action == 'O':
+                return "w"
+            elif action == 'C':
+                return False
 
 
 
