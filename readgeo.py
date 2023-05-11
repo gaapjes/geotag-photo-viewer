@@ -84,18 +84,17 @@ def read_exif (directory: str):
             try:
                 with open(img_path, "rb") as file:
                     exif = exifread.process_file(file, details=False)
-                # print(exif)
             except Exception:
                 print("File read error")
-                pass
+                continue
 
             # Extract geodata converted to decimal cordinates. If no geodata, continue loop
             try:
                 geo = {"name": name, "path": img_path,
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
                            "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef']}
-            except (NameError, KeyError, ZeroDivisionError):
-                print('No geodata')
+            except (KeyError, ZeroDivisionError):
+                #print('No geodata')
                 continue
             
             # Extract Timestamp. If no timestamp, pass
