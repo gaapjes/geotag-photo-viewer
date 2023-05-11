@@ -6,6 +6,7 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, ses
 from os import path
 from flaskwebgui import FlaskUI
 
+
 # Configure application
 app = Flask(__name__)
 
