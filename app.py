@@ -1,15 +1,19 @@
 import csv
 import folium
-
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+import readgeo
+from folium.plugins import MarkerCluster
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, send_file
+from os import path
+from flaskwebgui import FlaskUI
 
 # Configure application
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
+'''
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-
+'''
+'''
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -17,49 +21,62 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+'''
+
+app.secret_key = "Oke Doei"
+#app.config['SESSION_TYPE'] = 'filesystem'
+
+# Run readegeo module if theres no geadate csv file
+if not path.isfile("geo.csv"):
+    readgeo.main('.')
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # Create folium map and marker cluster
     map = folium.Map(location=[52, 4.9])
-    tooltip = "Click me!"
+    marker_cluster = MarkerCluster(disableClusteringAtZoom=15).add_to(map)
+    #disableClusteringAtZoom=13
 
-    with open("exif.csv", "r") as file:
+    # Read geadata csv file and create a marker for each entry
+    imglist = []
+    try:
+        file = open("geo.csv", "r")
+    except IOError:
+        return "No geodata file was found"
+    
+    with open("geo.csv", "r") as file:
         reader = csv.DictReader(file)
-        for row in reader:
+        for i, row in enumerate(reader):
             lat = row["latitude"]
             long = row["longitude"]
-            path = row["path"]
+            img_path = row["path"]
+            img_path = img_path.replace("\\", "/")
 
-            name = path.replace("\\", "/")
-            dir = r"file:///C:\Users\kaspe\Desktop\Staat op lacie\Camera 2022\DCIM\100MSDCF\DSC05931.JPG"
-
-            test = "a"
-            link = f'<a href="{dir}">link</a>'
-            #img = "<img src='/static/img_chania.jpg' alt='test' width='500' height='600'>" 
-            img = r"<img src='file:///C:/Users/kaspe/Desktop/Staat op lacie/Camera 2022/DCIM/100MSDCF/DSC05931.JPG' alt='test' width='500' height='600'>" 
-
-            popup = folium.Popup(img, parse_html=False)
-            folium.Marker([lat, long], popup=popup, tooltip=tooltip).add_to(map)
-
+            imglist.append(img_path)
     
-    '''
-    htmlcode = """<div>
-    <img src="/img_chania.jpg" alt="Flowers in Chania" width="230" height="172">
-    <br /><span>Flowers in Chania</span>
-    </div>"""
-    tooltip = "Click me!"
+            # marker popup content
+            img = f"<a href='/image/{i}' target='_blank'><img src='/image/{i}' title='{row['name']}' height='480px'></img></a>"
+            
+            popup = folium.Popup(img, parse_html=False)
+            
+            folium.Marker([lat, long], popup=popup, tooltip=row["timestamp"]).add_to(marker_cluster)
 
-    folium.Marker([46.216, -124.1280], popup=htmlcode, tooltip=tooltip).add_to(map)
-    '''
-
+    session["imglist"] = imglist
+    #folium.Marker([46.216, -124.1280], popup=htmlcode, tooltip=tooltip).add_to(map)
 
     return map.get_root().render()
-    #return render_template('index.html', map=map)
 
 
-    probeer:
 
-    @app.route('/media/<path:filename>', methods=['GET','POST'])
-def send_foo(filename):
-    return send_from_directory('/media/usbhdd1/downloads/', filename, as_attachment=True)
+@app.route("/image/<int:id>", methods=["GET", "POST"])
+def image(id):
+
+    return send_file(session["imglist"][id])
+
+
+if __name__ == "__main__":
+  # If you are debugging you can do that in the browser:
+  # app.run()
+  # If you want to view the flaskwebgui window:
+  FlaskUI(app=app, server="flask").run()
