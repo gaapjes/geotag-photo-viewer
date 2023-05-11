@@ -69,11 +69,11 @@ def index():
     return map.get_root().render()
 
 
-
 @app.route("/image/<int:id>", methods=["GET", "POST"])
 def image(id):
 
     return send_file(session["imglist"][id])
+
 
 
 if __name__ == "__main__":
