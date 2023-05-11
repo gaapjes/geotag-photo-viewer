@@ -10,18 +10,18 @@ Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
 
-def main(directory=None):
+def main(directory='.'):
     # Parse arguments, set photo directory
     # Use current directory when no argument given
-    if not directory:
-        try:
-            directory = os.path.abspath(sys.argv[1])
-            if not os.path.exists(directory):
-                print("Invalid directory")
-                return 1
-        except IndexError:
-            directory = "."
-            pass
+
+    if len(sys.argv) == 2:
+        if os.path.exists(sys.argv[1]):
+            directory = sys.argv[1]
+        else:
+            sys.exit("Invalid directory")
+            
+    print(directory)
+
 
     # Set path for output file
     csv_path = "geo.csv"
