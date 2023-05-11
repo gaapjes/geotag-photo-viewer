@@ -61,7 +61,8 @@ def set_mode (csv_path: str):
         return False
 
 
-# Extract coordinates from IfdTag and return in decimal format
+
+# Extract coordinates from IfdTag object and return in decimal format
 def convert_latlong(latlong, ref):
     latlong = latlong.values
     # Convert degrees to decimal
@@ -71,14 +72,14 @@ def convert_latlong(latlong, ref):
     return dec
   
 
+
 def read_exif (directory: str):
     out = []
 
     #create directory tree
     for root, dirs, files in os.walk(directory):
         for name in files:
-            img_path = os.path.join(root, name)
-            # print(img_path)
+            img_path = os.path.abspath(os.path.join(root, name))
             # Try to read file exif
             try:
                 with open(img_path, "rb") as file:
@@ -93,8 +94,8 @@ def read_exif (directory: str):
                 geo = {"name": name, "path": img_path,
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
                            "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef']}
-            except (NameError, KeyError):
-                #print('No geodata')
+            except (NameError, KeyError, ZeroDivisionError):
+                print('No geodata')
                 continue
             
             # Extract Timestamp. If no timestamp, pass
@@ -109,6 +110,7 @@ def read_exif (directory: str):
 
     print("Geotags found:", len(out))
     return out
+
 
 
 # Write csv file
