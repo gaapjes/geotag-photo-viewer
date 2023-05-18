@@ -15,7 +15,7 @@ app.secret_key = "Oke Doei"
 
 # Run readgeo module for current directory, if theres no geo.csv file
 if not path.isfile("geo.csv"):
-    readgeo.main('.')
+    readgeo.main()
 
 # imglist is global list of all image paths, used to serve the correct image
 imglist =[]

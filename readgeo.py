@@ -13,14 +13,8 @@ exif.csv file will be saved in program folder
 def main(directory='.'):
     # Parse arguments, set photo directory
     # Use current directory when no argument given
-
-    if len(sys.argv) == 2:
-        if os.path.exists(sys.argv[1]):
-            directory = sys.argv[1]
-        else:
-            sys.exit("Invalid directory")
-            
-    print(directory)
+    
+    print(os.path.abspath(directory))
 
 
     # Set path for output file
@@ -40,7 +34,6 @@ def main(directory='.'):
         print("Operation completed")
     else:
         print("No geodata found")
-
     return
 
  
@@ -118,7 +111,8 @@ def write_csv (path: str, mode: str, data: list):
     
     # Extract keys to use as header. Return 'False' if dict is empty
     try:
-        header = data[0].keys()
+        header = ["name", "path", "latitude", "lat ref", "longitude", "long ref"]
+        # header = data[0].keys()
     except IndexError:
         return False
     
@@ -137,6 +131,19 @@ def write_csv (path: str, mode: str, data: list):
     
     return True
 
+# Parses arguments and returns directory if valid directory.
+# Quit program if directory invalid, return '.'' if no argment given
+def parse_arg():
+    if len(sys.argv) < 2:
+        return '.'
+    elif len(sys.argv) == 2:
+        if os.path.exists(sys.argv[1]):
+            return sys.argv[1]
+        else:
+            sys.exit("Invalid directory")
+    elif len(sys.argv) > 2:
+        sys.exit("Too many arguments given")
+
 
 if __name__ == "__main__":
-    main()
+    main(parse_arg())
