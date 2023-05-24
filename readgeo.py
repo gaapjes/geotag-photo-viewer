@@ -20,11 +20,11 @@ def main(directory='.'):
     # Set path for output file
     csv_path = "geo.csv"
 
-    # Create csv file and csv writer obj, exit main() when returns False 
+    # Check if csv file, if necessary promt for write mode (Overwrite, Append, or cancel) and return write mode. Exit main() when returns False 
     mode = set_mode(csv_path)
     if not mode:
         print("Operation canceled")
-        return 1
+        sys.exit()
     
     # Read exif data
     geodata = read_exif(directory)
@@ -94,6 +94,7 @@ def read_exif (directory: str):
             try:
                 geo["timestamp"] = exif['EXIF DateTimeOriginal']
             except KeyError:
+                geo["timestamp"] = ''
                 print("No Timestamp")
                 pass
 
@@ -111,7 +112,7 @@ def write_csv (path: str, mode: str, data: list):
     
     # Extract keys to use as header. Return 'False' if dict is empty
     try:
-        header = ["name", "path", "latitude", "lat ref", "longitude", "long ref"]
+        header = ["name", "path", "latitude", "lat ref", "longitude", "long ref", "timestamp"]
         # header = data[0].keys()
     except IndexError:
         return False
