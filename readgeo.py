@@ -142,9 +142,10 @@ def parse_arg():
             return sys.argv[1]
         else:
             sys.exit("Invalid directory")
-    elif len(sys.argv) > 2:
+    else: # len(sys.argv) > 2:
         sys.exit("Too many arguments given")
 
 
 if __name__ == "__main__":
-    main(parse_arg())
+    arg = parse_arg()
+    main(arg)
