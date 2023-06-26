@@ -1,24 +1,27 @@
 import csv
 import folium
-import readgeo
 from folium.plugins import MarkerCluster, LocateControl
-from flask import Flask, send_file #flash, jsonify, redirect, render_template, request, session, send_file
+from flask import Flask, cli #flash, jsonify, redirect, render_template, request, session, send_file
 from os import path
 from flaskwebgui import FlaskUI
 
+# import georeader
 
+#cli = sys.modules["flask.cli"]
+cli.show_server_banner = lambda *args: None
 
 app = Flask(__name__)
-
-
 app.secret_key = "Oke Doei"
 
-# Run readgeo module for current directory, if theres no geo.csv file
-if not path.isfile("geo.csv"):
-    readgeo.main()
+
+# Run readgeo module for current directory, if theres no geotags.csv file
+'''
+if not path.isfile("geotags.csv"):
+    readgeo.main('.')
+'''
 
 # imglist is global list of all image paths, used to serve the correct image
-imglist =[]
+imglist = []
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -34,12 +37,12 @@ def index():
     
     # Read geadata csv file
     try:
-        file = open("geo.csv", "r")
+        file = open("geotags.csv", "r")
     except IOError:
         return "No geodata file was found"
     
     # Create a marker for each picture
-    with open("geo.csv", "r") as file:
+    with open("geotags.csv", "r") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             lat = row["latitude"]
@@ -70,10 +73,18 @@ def image(id):
     return send_file(imglist[id])
 
 
+def run():
+    
+
+    # Run the flaskwebgui window
+    FlaskUI(app=app, server="flask").run()
+
 
 if __name__ == "__main__":
-  # If you are debugging you can do that in the browser:
-  #app.run()
+    # If you are debugging you can do that in the browser:
+    #app.run()
   
-  # If you want to view the flaskwebgui window:
-  FlaskUI(app=app, server="flask").run()
+    # If you want to view the flaskwebgui window:
+    FlaskUI(app=app, server="flask").run()
+
+

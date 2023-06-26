@@ -3,6 +3,7 @@ import exifread
 import os
 import sys
 
+import flaskviewer
 
 '''
 Usage: python.exe main.py "image_folder".
@@ -10,31 +11,31 @@ Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
 
-def main(directory='.'):
+def main(directory='.', flaskview=True):
     # Parse arguments, set photo directory
     # Use current directory when no argument given
     
     print(os.path.abspath(directory))
 
-
     # Set path for output file
-    csv_path = "geo.csv"
+    csv_path = "geotags.csv"
 
-    # Check if csv file, if necessary promt for write mode (Overwrite, Append, or cancel) and return write mode. Exit main() when returns False 
+    # Check if csv file, if necessary promt for write mode (Overwrite, Append, or Skip) and return write mode. Exit main() when returns False 
     mode = set_mode(csv_path)
-    if not mode:
-        print("Operation canceled")
-        sys.exit()
-    
-    # Read exif data
-    geodata = read_exif(directory)
-
-    # Write csv file and print result
-    if write_csv(csv_path, mode, geodata):
-        print("Operation completed")
+    if mode:
+        # Read exif data
+        geodata = read_exif(directory)
+        # Write csv file
+        write_csv(csv_path, mode, geodata)
+        print("Geotag extraction completed") 
     else:
-        print("No geodata found")
-    return
+        # If Skip was selected
+        print("Geotag extraction skipped")
+        
+    # run the flaskwebgui window
+    flaskviewer.run()
+    
+    
 
  
 
@@ -45,12 +46,12 @@ def set_mode (csv_path: str):
         return "w"
     else:
         while True:
-            action = input(f"Database already exists. Do you wan to: [A]ppend, [O]verwrite, [C]ancel? : ").upper()
+            action = input(f"Database already exists. Do you want to: [A]ppend, [O]verwrite, [S]kip? : ").upper()
             if action == 'A':
                 return 'a'
             elif action == 'O':
                 return "w"
-            elif action == 'C':
+            elif action == 'S':
                 return False
 
 
@@ -111,17 +112,21 @@ def read_exif (directory: str):
 def write_csv (path: str, mode: str, data: list):
     
     # Extract keys to use as header. Return 'False' if dict is empty
+    '''
     try:
-        header = ["name", "path", "latitude", "lat ref", "longitude", "long ref", "timestamp"]
-        # header = data[0].keys()
+        header = data[0].keys()
     except IndexError:
         return False
+    '''
+
+    # Create csv file header
+    header = ["name", "path", "latitude", "lat ref", "longitude", "long ref", "timestamp"]
     
     # Write csv file
     try:
         file = open(path, mode, newline='')
     except IOError:
-        raise IOError
+        raise IOError("Error writing geotags.csv file")
 
     with file:
         writer = csv.DictWriter(file, fieldnames=header)
@@ -133,7 +138,7 @@ def write_csv (path: str, mode: str, data: list):
     return True
 
 # Parses arguments and returns directory if valid directory.
-# Quit program if directory invalid, return '.'' if no argment given
+# Quit program if directory invalid, return '.'' if no argument given
 def parse_arg():
     if len(sys.argv) < 2:
         return '.'
