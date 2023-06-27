@@ -37,7 +37,6 @@ def main(directory='.', flaskview=True):
     
     
 
- 
 
 # Check if csv file already exists.
 # Return desired file open mode, append, overwrite, or cancel operation
@@ -55,7 +54,6 @@ def set_mode (csv_path: str):
                 return False
 
 
-
 # Extract coordinates from IfdTag object and return in decimal format
 def convert_latlong(latlong, ref):
     latlong = latlong.values
@@ -65,7 +63,6 @@ def convert_latlong(latlong, ref):
     dec = -1 * dec if ref.values.upper() in ('S', 'W') else dec
     return dec
   
-
 
 def read_exif (directory: str):
     out = []
@@ -104,7 +101,6 @@ def read_exif (directory: str):
 
     print("Geotags found:", len(out))
     return out
-
 
 
 # Write csv file
