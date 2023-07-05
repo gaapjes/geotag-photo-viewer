@@ -12,9 +12,9 @@ exif.csv file will be saved in program folder
 '''
 
 def main(directory='.', flaskview=True):
-    # Parse arguments, set photo directory
-    # Use current directory when no argument given
-    
+    '''
+    Parse arguments, set photo directory. Use current directory when no argument given
+    '''
     print(os.path.abspath(directory))
 
     # Set path for output file
@@ -38,9 +38,11 @@ def main(directory='.', flaskview=True):
     
 
 
-# Check if csv file already exists.
-# Return desired file open mode, append, overwrite, or cancel operation
-def set_mode (csv_path: str):
+
+def set_mode(csv_path: str):
+    '''
+    Check if csv file already exists. Return desired file open mode, append, overwrite, or cancel operation
+    '''
     if not os.path.isfile(csv_path):
         return "w"
     else:
@@ -54,8 +56,16 @@ def set_mode (csv_path: str):
                 return False
 
 
-# Extract coordinates from IfdTag object and return in decimal format
+
 def convert_latlong(latlong, ref):
+    '''
+    Convert Latitude/Longitude valus from minutes to decimal format.
+
+    :type IfdTag obj: latlong
+    :return: Latitude/Longitude in decimal format
+    :rtype: float
+    '''
+    # Extract coordinates from IfdTag object
     latlong = latlong.values
     # Convert degrees to decimal
     dec = latlong[0] + latlong[1] / 60 + latlong[2].decimal() / 3600
@@ -65,6 +75,12 @@ def convert_latlong(latlong, ref):
   
 
 def read_exif (directory: str):
+    '''
+    Read exif data from all files in directory
+    
+    :return: A List of dicts with geolocation data
+    :rtype: list
+    '''
     out = []
 
     #create directory tree
@@ -79,7 +95,7 @@ def read_exif (directory: str):
                 print("File read error")
                 continue
 
-            # Extract geodata converted to decimal cordinates. If no geodata, continue loop
+            # Extract geodata converted to decimal coordinates. If no geodata, continue loop
             try:
                 geo = {"name": name, "path": img_path,
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
@@ -133,7 +149,7 @@ def write_csv (path: str, mode: str, data: list):
     
     return True
 
-# Parses arguments and returns directory if valid directory.
+# Parses arguments and returns directory if valid directory. 
 # Quit program if directory invalid, return '.'' if no argument given
 def parse_arg():
     if len(sys.argv) < 2:

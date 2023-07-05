@@ -1,7 +1,7 @@
 import csv
 import folium
 from folium.plugins import MarkerCluster, LocateControl
-from flask import Flask, cli #flash, jsonify, redirect, render_template, request, session, send_file
+from flask import Flask, cli, send_file #flash, jsonify, redirect, render_template, request, session
 from os import path
 from flaskwebgui import FlaskUI
 
