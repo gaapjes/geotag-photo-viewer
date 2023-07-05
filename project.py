@@ -5,38 +5,46 @@ import sys
 
 import flaskviewer
 
+import argparse
+
 '''
 Usage: python.exe main.py "image_folder".
 Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
 
-def main(directory='.', flaskview=True):
+def main():
     '''
     Parse arguments, set photo directory. Use current directory when no argument given
     '''
-    print(os.path.abspath(directory))
+    args = arg_parser()
 
-    # Set path for output file
-    csv_path = "geotags.csv"
+    if args.create:
+        # Give error is folder path doesn't exist
+        directory = os.path.abspath(args.directory)
+        print(directory)
+        if not os.path.exists(directory):
+            sys.exit("Invalid directory")
 
-    # Check if csv file, if necessary promt for write mode (Overwrite, Append, or Skip) and return write mode. Exit main() when returns False 
-    mode = set_mode(csv_path)
-    if mode:
-        # Read exif data
-        geodata = read_exif(directory)
-        # Write csv file
-        write_csv(csv_path, mode, geodata)
-        print("Geotag extraction completed") 
-    else:
-        # If Skip was selected
-        print("Geotag extraction skipped")
-        
-    # run the flaskwebgui window
-    flaskviewer.run()
+        # Set path for output file
+        csv_path = "geotags.csv"
+
+        # Check if csv file, if necessary promt for write mode (Overwrite, Append, or Skip) and return write mode. Exit main() when returns False 
+        mode = set_mode(csv_path)
+        if mode:
+            # Read exif data
+            geodata = read_exif(directory)
+            # Write csv file
+            write_csv(csv_path, mode, geodata)
+            print("Geotag extraction completed") 
+        else:
+            # If Skip was selected
+            print("Geotag extraction skipped")
     
+    if args.view:
+        # run the flaskwebgui window
+        flaskviewer.run()
     
-
 
 
 def set_mode(csv_path: str):
@@ -59,8 +67,7 @@ def set_mode(csv_path: str):
 
 def convert_latlong(latlong, ref):
     '''
-    Convert Latitude/Longitude valus from minutes to decimal format.
-
+    Convert Latitude/Longitude valus from minutes to decimal format.\n
     :type IfdTag obj: latlong
     :return: Latitude/Longitude in decimal format
     :rtype: float
@@ -76,8 +83,7 @@ def convert_latlong(latlong, ref):
 
 def read_exif (directory: str):
     '''
-    Read exif data from all files in directory
-    
+    Read exif data from all files in directory\n
     :return: A List of dicts with geolocation data
     :rtype: list
     '''
@@ -152,6 +158,7 @@ def write_csv (path: str, mode: str, data: list):
 # Parses arguments and returns directory if valid directory. 
 # Quit program if directory invalid, return '.'' if no argument given
 def parse_arg():
+    ''' DEPRECATED '''
     if len(sys.argv) < 2:
         return '.'
     elif len(sys.argv) == 2:
@@ -163,6 +170,22 @@ def parse_arg():
         sys.exit("Too many arguments given")
 
 
+def arg_parser():
+    '''
+    Parse command line arguments
+    :flag --scan: Only extract and geodata and create csv
+    :flag --view: Only Load csv and view in Folium
+    :arg folder: Selects picture folder
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--create', action="store_true")
+    parser.add_argument('-v', '--view', action="store_true")
+    parser.add_argument('directory', default=".", nargs="?")
+    args = parser.parse_args()
+    if not (args.create or args.view):
+        args.create = args.view = True
+    return args
+
+
 if __name__ == "__main__":
-    arg = parse_arg()
-    main(arg)
+    main()
