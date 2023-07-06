@@ -178,9 +178,9 @@ def arg_parser():
     :arg folder: Selects picture folder
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--create', action="store_true")
-    parser.add_argument('-v', '--view', action="store_true")
-    parser.add_argument('directory', default=".", nargs="?")
+    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and crate geo.csv")
+    parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geo.csv file")
+    parser.add_argument('directory', default=".", nargs="?", help="Photo directory")
     args = parser.parse_args()
     if not (args.create or args.view):
         args.create = args.view = True
