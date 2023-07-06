@@ -2,10 +2,11 @@ import csv
 import exifread
 import os
 import sys
+import argparse
 
 import flaskviewer
 
-import argparse
+
 
 '''
 Usage: python.exe main.py "image_folder".
@@ -125,9 +126,11 @@ def read_exif (directory: str):
     return out
 
 
-# Write csv file
-# On success return 'True', on failure return 'False'
 def write_csv (path: str, mode: str, data: list):
+    '''
+    Write csv file
+    On success return 'True', on failure return 'False'
+    '''
     
     # Extract keys to use as header. Return 'False' if dict is empty
     '''
@@ -182,6 +185,7 @@ def arg_parser():
     parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geo.csv file")
     parser.add_argument('directory', default=".", nargs="?", help="Photo directory")
     args = parser.parse_args()
+    # Default mode, When no argument given, do create and view
     if not (args.create or args.view):
         args.create = args.view = True
     return args

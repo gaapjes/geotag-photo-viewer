@@ -21,7 +21,8 @@ if not path.isfile("geotags.csv"):
 '''
 
 # imglist is global list of all image paths, used to serve the correct image
-imglist = []
+#imglist = []
+imgdict = {}
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -50,7 +51,8 @@ def index():
             img_path = row["path"]
             img_path = img_path.replace("\\", "/")
 
-            imglist.append(img_path)
+            #imglist.append(img_path)
+            imgdict[str(i)] = img_path
     
             # marker popup content, loads image url 
             img = f"<a href='/image/{i}' target='_blank'><img src='/image/{i}' title='{row['name']}' height='600px'></img></a>"
@@ -60,17 +62,24 @@ def index():
             folium.Marker([lat, long], popup=popup, tooltip=row["timestamp"]).add_to(marker_cluster)
 
     # Print numer of pictures on map
-    print("Pictures: ", len(imglist))
+    print("Pictures: ", len(imgdict))
     
     # Show Folium map
     return map.get_root().render()
 
 
+'''
 @app.route("/image/<int:id>", methods=["GET", "POST"])
 def image(id):
     # Return the requested image from imglist
     global imglist
     return send_file(imglist[id])
+'''
+@app.route("/image/<id>", methods=["GET", "POST"])
+def image(id):
+    # Return the requested image from imglist
+    global imgdict
+    return send_file(imgdict[id])
 
 
 def run():
