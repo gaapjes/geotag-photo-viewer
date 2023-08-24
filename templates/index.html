@@ -4,15 +4,24 @@
 
 <head>
 <!--    <link href="/static/styles.css" rel="stylesheet">   -->
-    <title>Map</title>
+    <title>Geo viewer</title>
 </head>
 
 <body>
     <div class="header">
-        <h1>Map</h1>
+        <h1>Geo viewer</h1>
     </div>
     <div>
-        {{ map }}
+        <form action="/" method="post">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="symbol" placeholder="Stock name"
+                    type="file" webkitdirectory multiple>
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="shares" placeholder="1"
+                    type="number">
+                <button name="submit" value="submit" class="btn btn-primary">Run</button>
+            </div>
+        
+        </form>
     </div>
 </body>
 

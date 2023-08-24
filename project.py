@@ -9,7 +9,7 @@ import flaskviewer
 
 
 '''
-Usage: python.exe main.py "image_folder".
+Usage: python.exe project.py "image_folder".
 Will looks for pictures in program folder when no directory specified.
 exif.csv file will be saved in program folder
 '''
@@ -21,7 +21,7 @@ def main():
     args = arg_parser()
 
     if args.create:
-        # Give error is folder path doesn't exist
+        # Give error if folder path doesn't exist
         directory = os.path.abspath(args.directory)
         print(directory)
         if not os.path.exists(directory):
