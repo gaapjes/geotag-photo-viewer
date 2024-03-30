@@ -96,18 +96,17 @@ def image(id):
     return send_file(imgdict[id])
 
 
-def run():
-    
-
+def show_map():
     # Run the flaskwebgui window
     FlaskUI(app=app, server="flask").run()
 
 
 if __name__ == "__main__":
+    show_map()
     # If you are debugging you can do that in the browser:
     #app.run()
   
     # If you want to view the flaskwebgui window:
-    FlaskUI(app=app, server="flask").run()
+    #FlaskUI(app=app, server="flask").run()
 
 

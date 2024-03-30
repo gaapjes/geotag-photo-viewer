@@ -4,7 +4,7 @@ import os
 import sys
 import argparse
 
-import flaskviewer
+from flaskviewer import show_map
 
 
 
@@ -44,7 +44,7 @@ def main():
     
     if args.view:
         # run the flaskwebgui window
-        flaskviewer.run()
+        show_map()
     
 
 
