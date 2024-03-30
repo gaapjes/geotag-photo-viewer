@@ -1,7 +1,7 @@
 import csv
 import folium
 from folium.plugins import MarkerCluster, LocateControl
-from flask import Flask, cli, send_file #flash, jsonify, redirect, render_template, request, session
+from flask import Flask, cli, send_file, render_template, request, redirect #flash, jsonify, ,  , session
 from os import path
 from flaskwebgui import FlaskUI
 
@@ -27,6 +27,20 @@ imgdict = {}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    return redirect("/mapview")
+    if request.method == "POST":
+
+        # Get button press
+        if request.form.get("submit"):
+            return redirect("/mapview")
+    
+
+    return render_template("index.html", map=map)
+
+
+
+@app.route("/mapview", methods=["GET", "POST"])
+def mapview():
     
     global imglist
 

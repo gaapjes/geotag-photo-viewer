@@ -2,7 +2,7 @@ import tkinter as tk
 import tkintermapview
 import PIL
 import csv
-import readgeo
+import project
 
 
 def click(marker):
@@ -31,7 +31,7 @@ def click(marker):
         marker.hide_image(True)
     
 
-readgeo.main(r"G:\Ba\Fotos 2000_2021\2017")
+project.main()
 
 active_marker = False
 
@@ -49,7 +49,7 @@ map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z
 
 # Read csv to make list of markers
 markers = []
-with open("exif.csv", "r") as file:
+with open("geotags.csv", "r") as file:
     reader = csv.DictReader(file)
     for i, row in enumerate(reader):
         path = row["path"]
