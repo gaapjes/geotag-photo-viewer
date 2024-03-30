@@ -3,6 +3,7 @@ import tkintermapview
 import PIL
 import csv
 import project
+#teeeest
 
 
 def click(marker):
@@ -31,7 +32,7 @@ def click(marker):
         marker.hide_image(True)
     
 
-project.main()
+#project.main()
 
 active_marker = False
 
