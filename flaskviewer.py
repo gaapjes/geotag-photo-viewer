@@ -38,7 +38,6 @@ def index():
     return render_template("index.html", map=map)
 
 
-
 @app.route("/mapview", methods=["GET", "POST"])
 def mapview():
     
@@ -94,6 +93,10 @@ def image(id):
     # Return the requested image from imglist
     global imgdict
     return send_file(imgdict[id])
+
+
+def show_map():
+    ui.run()
 
 
 if __name__ == "__main__":
