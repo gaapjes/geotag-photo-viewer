@@ -178,7 +178,7 @@ def arg_parser():
     Parse command line arguments
     :flag --scan: Only extract and geodata and create csv
     :flag --view: Only Load csv and view in Folium
-    :arg folder: Selects picture folder
+    :arg directory: Selects picture directory
     '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and crate geo.csv")

@@ -12,7 +12,7 @@ cli.show_server_banner = lambda *args: None
 
 app = Flask(__name__)
 app.secret_key = "Oke Doei"
-
+ui = FlaskUI(app=app, server="flask")
 
 # Run readgeo module for current directory, if theres no geotags.csv file
 '''
@@ -96,13 +96,9 @@ def image(id):
     return send_file(imgdict[id])
 
 
-def show_map():
-    # Run the flaskwebgui window
-    FlaskUI(app=app, server="flask").run()
-
-
 if __name__ == "__main__":
-    show_map()
+    ui.run()
+
     # If you are debugging you can do that in the browser:
     #app.run()
   
