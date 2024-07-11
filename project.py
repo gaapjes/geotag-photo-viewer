@@ -4,13 +4,11 @@ import os
 import sys
 import argparse
 
-from flaskviewer import show_map
-
 
 '''
 Usage: python.exe project.py "image_folder".
 Will looks for pictures in program folder when no directory specified.
-exif.csv file will be saved in program folder
+geotags.csv file will be saved in program folder
 '''
 
 def main():
@@ -42,7 +40,8 @@ def main():
             print("Geotag extraction skipped")
     
     if args.view:
-        # run the flaskwebgui window
+        # run the flaskviewer window. Import placed here to improve program startup time
+        from flaskviewer import show_map
         show_map()
     
 
@@ -180,12 +179,15 @@ def arg_parser():
     :arg directory: Selects picture directory
     '''
     parser = argparse.ArgumentParser(
-                    prog='Exif gps extractor',
-                    description="By default gps date of files in root folder (subfolders included) will be extracted and saved in a 'geodata.csv' file in root folder. The flaskviewer will open to provide a map view of the extracted info.",
-                    epilog='Kasper Vloon, 2024')
-    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geo.csv")
-    parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geo.csv file")
-    parser.add_argument('directory', default=".", nargs="?", help="Photo directory")
+                    prog="Exif gps extractor",
+                    description="""Will look for image files in program folder when no directory specified.\n
+                                geotags.csv file will be saved in program folder.\n
+                                By default map view will be opened after geodata import
+                                """,
+                    epilog="Kasper Vloon, 2024")
+    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geotags.csv")
+    parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geotags.csv file")
+    parser.add_argument('directory', default=".", nargs="?", help="Set photo directory to be read")
     args = parser.parse_args()
     # Default mode, When no argument given, do create and view
     if not (args.create or args.view):

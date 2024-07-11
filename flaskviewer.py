@@ -12,16 +12,10 @@ cli.show_server_banner = lambda *args: None
 
 app = Flask(__name__)
 app.secret_key = "Oke Doei"
-ui = FlaskUI(app=app, server="flask")
+ui = FlaskUI(app=app, server="flask") #, extra_flags=["--disable-sync"])
 
-# Run readgeo module for current directory, if theres no geotags.csv file
-'''
-if not path.isfile("geotags.csv"):
-    readgeo.main('.')
-'''
 
-# imglist is global list of all image paths, used to serve the correct image
-#imglist = []
+# imgdict is global dict of all image paths, used to serve the correct image
 imgdict = {}
 
 
@@ -63,34 +57,23 @@ def mapview():
             long = row["longitude"]
             img_path = row["path"]
             img_path = img_path.replace("\\", "/")
-
-            #imglist.append(img_path)
             imgdict[str(i)] = img_path
     
             # marker popup content, loads image url 
             img = f"<a href='/image/{i}' target='_blank'><img src='/image/{i}' title='{row['name']}' height='600px'></img></a>"
-            
             popup = folium.Popup(img, parse_html=False, lazy=True)
-            
             folium.Marker([lat, long], popup=popup, tooltip=row["timestamp"]).add_to(marker_cluster)
 
-    # Print numer of pictures on map
+    # Print number of images
     print("Pictures: ", len(imgdict))
     
     # Show Folium map
     return map.get_root().render()
 
 
-'''
-@app.route("/image/<int:id>", methods=["GET", "POST"])
-def image(id):
-    # Return the requested image from imglist
-    global imglist
-    return send_file(imglist[id])
-'''
 @app.route("/image/<id>", methods=["GET", "POST"])
 def image(id):
-    # Return the requested image from imglist
+    # Return the requested image from imgdict
     global imgdict
     return send_file(imgdict[id])
 
