@@ -1,0 +1,4 @@
+exifread
+flask
+flaskwebgui
+folium

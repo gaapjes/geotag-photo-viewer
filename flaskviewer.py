@@ -1,8 +1,8 @@
 import csv
+from os import path
 import folium
 from folium.plugins import MarkerCluster, LocateControl
 from flask import Flask, cli, send_file, render_template, request, redirect #flash, jsonify, ,  , session
-from os import path
 from flaskwebgui import FlaskUI
 
 # import georeader
@@ -107,5 +107,3 @@ if __name__ == "__main__":
   
     # If you want to view the flaskwebgui window:
     #FlaskUI(app=app, server="flask").run()
-
-

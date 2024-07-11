@@ -7,7 +7,6 @@ import argparse
 from flaskviewer import show_map
 
 
-
 '''
 Usage: python.exe project.py "image_folder".
 Will looks for pictures in program folder when no directory specified.
