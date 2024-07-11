@@ -3,8 +3,8 @@ import tkintermapview
 import PIL
 import csv
 import project
-#teeeest
 
+# this is a TKinter alternative for the flaskWebGUI viewer. Currently not in use.
 
 def click(marker):
     global active_marker

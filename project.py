@@ -175,12 +175,15 @@ def parse_arg():
 def arg_parser():
     '''
     Parse command line arguments
-    :flag --scan: Only extract and geodata and create csv
+    :flag --create: Only extract geodata and create csv
     :flag --view: Only Load csv and view in Folium
     :arg directory: Selects picture directory
     '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and crate geo.csv")
+    parser = argparse.ArgumentParser(
+                    prog='Exif gps extractor',
+                    description="By default gps date of files in root folder (subfolders included) will be extracted and saved in a 'geodata.csv' file in root folder. The flaskviewer will open to provide a map view of the extracted info.",
+                    epilog='Kasper Vloon, 2024')
+    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geo.csv")
     parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geo.csv file")
     parser.add_argument('directory', default=".", nargs="?", help="Photo directory")
     args = parser.parse_args()

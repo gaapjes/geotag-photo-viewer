@@ -100,10 +100,10 @@ def show_map():
 
 
 if __name__ == "__main__":
-    ui.run()
+    #ui.run()
 
     # If you are debugging you can do that in the browser:
-    #app.run()
+    app.run()
   
     # If you want to view the flaskwebgui window:
     #FlaskUI(app=app, server="flask").run()
