@@ -124,10 +124,10 @@ def read_exif (directory: str):
     return out
 
 
-def write_csv (path: str, mode: str, data: list):
+def write_csv (path: str, write_mode: str, data: list):
     '''
     Write csv file
-    On success return 'True', on failure return 'False'
+    On succes return 'True'
     '''
     
     # Extract keys to use as header. Return 'False' if dict is empty
@@ -141,15 +141,18 @@ def write_csv (path: str, mode: str, data: list):
     # Create csv file header
     header = ["name", "path", "latitude", "lat ref", "longitude", "long ref", "timestamp"]
     
+    if not write_mode in ("w", "a"):
+        raise IOError(f"Incorrect write mode specified. Please use 'w' or 'a'")
+
     # Write csv file
     try:
-        file = open(path, mode, newline='')
+        file = open(path, write_mode, newline='')
     except IOError:
         raise IOError("Error writing geotags.csv file")
 
     with file:
         writer = csv.DictWriter(file, fieldnames=header)
-        if mode == "w":
+        if write_mode == "w":
             writer.writeheader()
         for row in data:
             writer.writerow(row)
@@ -160,7 +163,7 @@ def write_csv (path: str, mode: str, data: list):
 # Quit program if directory invalid, return '.'' if no argument given
 '''
 def parse_arg():
-    ''' DEPRECATED '''
+    # DEPRECATED #
     if len(sys.argv) < 2:
         return '.'
     elif len(sys.argv) == 2:
@@ -183,12 +186,12 @@ def arg_parser():
                     prog="Exif gps extractor",
                     description="""Will look for image files in program folder when no directory specified.\n
                                 geotags.csv file will be saved in program folder.\n
-                                By default map view will be opened after geodata import
+                                By default map view will be opened after geodata import.
                                 """,
                     epilog="Kasper Vloon, 2024")
     parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geotags.csv")
     parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geotags.csv file")
-    parser.add_argument('directory', default=".", nargs="?", help="Set photo directory to be read")
+    parser.add_argument('directory', default=".", nargs="?", help="Set photo directory to be read (including subdirectories)")
     args = parser.parse_args()
     # Default mode, When no argument given, do create and view
     if not (args.create or args.view):
