@@ -15,7 +15,7 @@ def main():
     '''
     Parse arguments, set photo directory. Use current directory when no argument given
     '''
-    args = arg_parser()
+    args = arg_parser(sys.argv[1:])
 
     if args.create:
         # Give error if folder path doesn't exist
@@ -34,10 +34,10 @@ def main():
             geodata = read_exif(directory)
             # Write csv file
             write_csv(csv_path, mode, geodata)
-            print("Geotag extraction completed") 
+            print("Geotags saved") 
         else:
             # If Skip was selected
-            print("Geotag extraction skipped")
+            print("Geotags not saved")
     
     if args.view:
         # run the flaskviewer window. Import placed here to improve program startup time
@@ -90,8 +90,8 @@ def read_exif (directory: str):
 
     #create directory tree
     for root, dirs, files in os.walk(directory):
-        for name in files:
-            img_path = os.path.abspath(os.path.join(root, name))
+        for file in files:
+            img_path = os.path.abspath(os.path.join(root, file))
             # Try to read file exif
             try:
                 with open(img_path, "rb") as file:
@@ -102,7 +102,7 @@ def read_exif (directory: str):
 
             # Extract geodata converted to decimal coordinates. If no geodata, continue loop
             try:
-                geo = {"name": name, "path": img_path,
+                geo = {"name": file, "path": img_path,
                            "latitude": convert_latlong(exif["GPS GPSLatitude"], exif['GPS GPSLatitudeRef']), "lat ref": exif['GPS GPSLatitudeRef'],
                            "longitude": convert_latlong(exif['GPS GPSLongitude'], exif['GPS GPSLongitudeRef']), "long ref": exif['GPS GPSLongitudeRef']}
             except (KeyError, ZeroDivisionError):
@@ -114,7 +114,6 @@ def read_exif (directory: str):
                 geo["timestamp"] = exif['EXIF DateTimeOriginal']
             except KeyError:
                 geo["timestamp"] = ''
-                print("No Timestamp")
                 pass
 
             # Append geodata to output list
@@ -175,7 +174,7 @@ def parse_arg():
         sys.exit("Too many arguments given")
 '''
 
-def arg_parser():
+def arg_parser(args):
     '''
     Parse command line arguments
     :flag --create: Only extract geodata and create csv
@@ -192,7 +191,7 @@ def arg_parser():
     parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geotags.csv")
     parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geotags.csv file")
     parser.add_argument('directory', default=".", nargs="?", help="Set photo directory to be read (including subdirectories)")
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     # Default mode, When no argument given, do create and view
     if not (args.create or args.view):
         args.create = args.view = True
