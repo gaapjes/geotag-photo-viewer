@@ -82,8 +82,7 @@ def image(id):
 
 def show_map():
     # Show in browser:
-    app.run()
-    return
+    #app.run()
 
     # Show in flaskwebgui window:
     ui = FlaskUI(app=app, server="flask") #, extra_flags=["--disable-sync"])
