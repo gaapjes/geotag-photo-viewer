@@ -72,7 +72,9 @@ def convert_latlong(latlong, ref):
     :rtype: float
     '''
     # Extract coordinates from IfdTag object
+    #print(latlong.printable, latlong.tag, latlong.field_type, latlong.values, latlong.field_offset, latlong.field_length)
     latlong = latlong.values
+    #print(dir(latlong))
     # Convert degrees to decimal
     dec = latlong[0] + latlong[1] / 60 + latlong[2].decimal() / 3600
     # minus sign if ref = S or W
@@ -94,8 +96,8 @@ def read_exif (directory: str):
             img_path = os.path.abspath(os.path.join(root, file))
             # Try to read file exif
             try:
-                with open(img_path, "rb") as file:
-                    exif = exifread.process_file(file, details=False)
+                with open(img_path, "rb") as handle:
+                    exif = exifread.process_file(handle, details=False)
             except Exception:
                 print("File read error")
                 continue

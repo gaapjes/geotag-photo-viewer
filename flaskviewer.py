@@ -12,8 +12,6 @@ cli.show_server_banner = lambda *args: None
 
 app = Flask(__name__)
 app.secret_key = "Oke Doei"
-ui = FlaskUI(app=app, server="flask") #, extra_flags=["--disable-sync"])
-
 
 # imgdict is global dict of all image paths, used to serve the correct image
 imgdict = {}
@@ -35,12 +33,8 @@ def index():
 @app.route("/mapview", methods=["GET", "POST"])
 def mapview():
     
-    global imglist
-
-    # Create folium map and marker cluster
-    map = folium.Map(location=[52, 4.9])
-    LocateControl().add_to(map)
-    marker_cluster = MarkerCluster(disableClusteringAtZoom=17).add_to(map)
+    # Create marker cluster
+    marker_cluster = MarkerCluster(disableClusteringAtZoom=17)
     #disableClusteringAtZoom=14
     
     # Read geadata csv file
@@ -53,8 +47,8 @@ def mapview():
     with open("geotags.csv", "r") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
-            lat = row["latitude"]
-            long = row["longitude"]
+            lat = float(row["latitude"])
+            long = float(row["longitude"])
             img_path = row["path"]
             img_path = img_path.replace("\\", "/")
             imgdict[str(i)] = img_path
@@ -64,29 +58,44 @@ def mapview():
             popup = folium.Popup(img, parse_html=False, lazy=True)
             folium.Marker([lat, long], popup=popup, tooltip=row["timestamp"]).add_to(marker_cluster)
 
+            # Focus map start viewpoint on first marker
+            if i == 0:
+                startpos = [lat, long]
+
     # Print number of images
     print("Pictures: ", len(imgdict))
     
-    # Show Folium map
-    return map.get_root().render()
+    # Build Folium map
+    map = folium.Map(location=startpos)
+    LocateControl().add_to(map)
+    marker_cluster.add_to(map)
 
+    # Render map
+    return map.get_root().render()
+    
 
 @app.route("/image/<id>", methods=["GET", "POST"])
 def image(id):
     # Return the requested image from imgdict
-    global imgdict
     return send_file(imgdict[id])
 
 
 def show_map():
-    ui.run()
+    # Show in browser:
+    app.run()
+    return
 
+    # Show in flaskwebgui window:
+    ui = FlaskUI(app=app, server="flask") #, extra_flags=["--disable-sync"])
+    ui.run()
+    
 
 if __name__ == "__main__":
-    #ui.run()
-
-    # If you are debugging you can do that in the browser:
+    # Show in browser:
     app.run()
   
-    # If you want to view the flaskwebgui window:
-    #FlaskUI(app=app, server="flask").run()
+    # Show in flaskwebgui window:
+    '''
+    ui = FlaskUI(app=app, server="flask") #, extra_flags=["--disable-sync"])
+    ui.run()
+    '''

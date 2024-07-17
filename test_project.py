@@ -54,6 +54,7 @@ def test_write_csv():
 '''
     
 def test_read_exif():
-    assert read_exif("./templates") == []
+    assert len(read_exif(".")) == 3
     assert len(read_exif("./testfotos")) == 3
+    assert read_exif("./templates") == []
     assert read_exif("ioghjl_nonexisting") == []
