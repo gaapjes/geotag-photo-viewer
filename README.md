@@ -1,4 +1,4 @@
-# Exif gps extractor CS50p final project
+# Photo location viewer CS50p final project
 #### Video Demo:  <URL HERE>
 #### Description:
 
