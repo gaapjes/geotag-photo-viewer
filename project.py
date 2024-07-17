@@ -1,9 +1,9 @@
 import csv
-import exifread
 import os
 import sys
 import argparse
 
+import exifread
 
 '''
 Usage: python.exe project.py "image_folder".
