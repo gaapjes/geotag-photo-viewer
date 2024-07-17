@@ -17,7 +17,7 @@ def main():
     '''
     args = arg_parser(sys.argv[1:])
 
-    if args.create:
+    if args.read:
         # Give error if folder path doesn't exist
         directory = os.path.abspath(args.directory)
         print(directory)
@@ -72,14 +72,24 @@ def convert_latlong(latlong, ref):
     :rtype: float
     '''
     # Extract coordinates from IfdTag object
+    #print(ref.printable, ref.tag, ref.field_type, ref.values, ref.field_offset, ref.field_length)
     #print(latlong.printable, latlong.tag, latlong.field_type, latlong.values, latlong.field_offset, latlong.field_length)
     latlong = latlong.values
-    #print(dir(latlong))
     # Convert degrees to decimal
-    dec = latlong[0] + latlong[1] / 60 + latlong[2].decimal() / 3600
-    # minus sign if ref = S or W
-    dec = -1 * dec if ref.values.upper() in ('S', 'W') else dec
-    return dec
+    if latlong[0] >= 0:
+        dec = latlong[0] + latlong[1] / 60 + latlong[2].decimal() / 3600
+    else:
+        dec = latlong[0] - latlong[1] / 60 - latlong[2].decimal() / 3600
+
+    if ref.values.upper() in ('N', 'E'):
+        # dec = dec
+        pass
+    elif ref.values.upper() in ('S', 'W'):
+        dec = -1 * dec
+    else:
+        raise TypeError
+    
+    return round(dec, 5)
   
 
 def read_exif (directory: str):
@@ -190,13 +200,13 @@ def arg_parser(args):
                                 By default map view will be opened after geodata import.
                                 """,
                     epilog="Kasper Vloon, 2024")
-    parser.add_argument('-c', '--create', action="store_true", help="Only read geodata and create geotags.csv")
+    parser.add_argument('-r', '--read', action="store_true", help="Only read geodata and create geotags.csv")
     parser.add_argument('-v', '--view', action="store_true", help="Show images from existing geotags.csv file")
     parser.add_argument('directory', default=".", nargs="?", help="Set photo directory to be read (including subdirectories)")
     args = parser.parse_args(args)
     # Default mode, When no argument given, do create and view
-    if not (args.create or args.view):
-        args.create = args.view = True
+    if not (args.read or args.view):
+        args.read = args.view = True
     return args
 
 
