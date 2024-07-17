@@ -1,4 +1,4 @@
-# Photo location viewer CS50p final project
+# geotag-photo-viewer CS50p final project
 #### Video Demo:  <URL HERE>
 #### Description:
 
@@ -8,7 +8,7 @@ This program can be used to extract gps info from a folder with images containin
 
 ### How to use:
 
-usage: Exif gps extractor [-h] [-c] [-v] [directory]
+usage: project.py [-h] [-c] [-v] [directory]
 
 Will look for image files in program folder when no directory specified. geotags.csv file will be saved in program folder. By default map view will be opened    
 after geodata import.

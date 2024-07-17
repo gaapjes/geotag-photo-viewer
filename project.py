@@ -194,7 +194,7 @@ def arg_parser(args):
     :arg directory: Selects picture directory
     '''
     parser = argparse.ArgumentParser(
-                    prog="Exif gps extractor",
+                    prog="project.py",
                     description="""Will look for image files in program folder when no directory specified.\n
                                 geotags.csv file will be saved in program folder.\n
                                 By default map view will be opened after geodata import.
