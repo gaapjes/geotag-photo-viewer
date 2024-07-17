@@ -30,15 +30,15 @@ def test_arg_parser_cv():
     assert args.directory == "."
 
 def test_arg_parser_dir():
-    args = arg_parser(["-r", "-v", "this is a dir/test"])
+    args = arg_parser(["-r", "-v", "/this is a dir/test"])
     assert args.read == True
     assert args.view == True
-    assert args.directory == "this is a dir/test"
+    assert args.directory == "/this is a dir/test"
 
     
 def test_read_exif():
     assert len(read_exif(".")) == 3
-    assert len(read_exif("./testfotos")) == 3
+    assert len(read_exif("./test images")) == 3
     assert read_exif("./templates") == []
     assert read_exif("ioghjl_nonexisting") == []
 
