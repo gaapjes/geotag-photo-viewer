@@ -170,21 +170,6 @@ def write_csv (path: str, write_mode: str, data: list):
     
     return True
 
-# Parses arguments and returns directory if valid directory. 
-# Quit program if directory invalid, return '.'' if no argument given
-'''
-def parse_arg():
-    # DEPRECATED #
-    if len(sys.argv) < 2:
-        return '.'
-    elif len(sys.argv) == 2:
-        if os.path.exists(sys.argv[1]):
-            return sys.argv[1]
-        else:
-            sys.exit("Invalid directory")
-    else: # len(sys.argv) > 2:
-        sys.exit("Too many arguments given")
-'''
 
 def arg_parser(args):
     '''
