@@ -89,7 +89,7 @@ def convert_latlong(latlong, ref):
     else:
         raise TypeError
     
-    return round(dec, 5)
+    return round(dec, 6)
   
 
 def read_exif (directory: str):

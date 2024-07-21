@@ -94,7 +94,8 @@ resultlist = [42.367909,
 def test_convert_latlong_valid():
     for i, test in enumerate(testlist):
         tags = make_ifdtag(test[0], test[1])
-        assert convert_latlong(tags[0], tags[1]) == round(resultlist[i], 5)
+        print(convert_latlong(tags[0], tags[1]))
+        assert abs(convert_latlong(tags[0], tags[1]) - round(resultlist[i], 6)) <= 0.000001
 
 def test_convert_latlong_invalid():
     tags = make_ifdtag([0, 0, make_ratio(0)], "")
