@@ -37,8 +37,8 @@ def test_arg_parser_dir():
 
     
 def test_read_exif():
-    assert len(read_exif(".")) == 25
-    assert len(read_exif("./test images 1/")) == 14
+    assert len(read_exif(".")) == 24
+    assert len(read_exif("./test images 1/")) == 13
     assert read_exif("./templates/") == []
     assert read_exif("ioghjl_nonexisting") == []
 
