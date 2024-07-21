@@ -1,6 +1,6 @@
 # geotag-photo-viewer CS50p final project
-#### Video Demo: (https://www.youtube.com/watch?v=FbaNtHtzkXo)
-#### Description:
+#### Video Demo: https://www.youtube.com/watch?v=FbaNtHtzkXo
+#### Description: Show your Geotagged pictures on an interactive map
 
 ## Exif gps extractor
 
@@ -42,13 +42,13 @@ This function will check if a geodata.csv file exists in the current directory. 
 [S]kip the Exif read operation.
 
 ## convert_latlong
-Extracted coordinates will be in 'Degrees, minutes, and seconds' format. This function will convert the coordinates to 'decimal' format as required by the folium module.
+Coordinates extracted from exif will be in 'Degrees, minutes, and seconds' format. This function convert the coordinates to 'decimal' format, which is easier to handle and is required to creeate the folium location markers.
 
 ## read_exif
 Uses 'argparse' module
 This function will search the specified directory (including subdirectories) for all files containing exif metadata and will extract the gps coordinates.
-For every file containing gpsdata a 'dict' will be created containing fields for the filename, file path, latitude and longitude.
-Output is a 'list' containing the dicts.
+For every image containing gpsdata a dict will be created containing fields for the filename, file path, latitude and longitude.
+Output is a list containing all image dicts.
 
 ## write_scv
 Will write the list of geodata to .csv file at the specified path.
@@ -63,7 +63,4 @@ Currently a redirect to the '/mapview' route. This could in the future be used f
 Reads the 'geotags.csv' in program root directory. For every line a position marker is created at the saved coordinates. Every position marker containing a popup in which the corresponding image is embedded.
 
 ## route '/image/<id>'
-serves full version of the image when clicked upon.
-
-
-
+serves full version of the image when requested.
