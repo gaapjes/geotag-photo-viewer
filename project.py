@@ -19,6 +19,7 @@ def main():
 
     if args.read:
         # Give error if folder path doesn't exist
+        print(args.directory)
         directory = os.path.abspath(args.directory)
         print(directory)
         if not os.path.exists(directory):
