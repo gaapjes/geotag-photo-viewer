@@ -3,5 +3,5 @@ __pycache__/
 build/
 dist/
 geotags.csv
-test images 1/
-test images 2/
+#test images 1/
+#test images 2/
