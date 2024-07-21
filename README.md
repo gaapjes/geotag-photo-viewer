@@ -1,6 +1,6 @@
-# geotag-photo-viewer CS50p final project
+# Geotag Photo Viewer CS50p final project
 #### Video Demo: https://www.youtube.com/watch?v=FbaNtHtzkXo
-#### Description: Show your Geotagged pictures on an interactive map
+#### Description: View your geotagged pictures on an interactive map!
 
 ## Exif gps extractor
 
