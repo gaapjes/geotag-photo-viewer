@@ -82,12 +82,9 @@ def convert_latlong(latlong, ref):
     else:
         dec = latlong[0] - latlong[1] / 60 - latlong[2].decimal() / 3600
 
-    if ref.values.upper() in ('N', 'E'):
-        # dec = dec
-        pass
-    elif ref.values.upper() in ('S', 'W'):
+    if ref.values.upper() in ('S', 'W'):
         dec = -1 * dec
-    else:
+    elif ref.values.upper() not in ('N', 'E'):
         raise TypeError
     
     return round(dec, 6)
